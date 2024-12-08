@@ -7,15 +7,6 @@
 
 import SwiftUI
  
-struct FlagImage: View {
-    var countryName: String
-    
-    var body: some View {
-        Image(countryName)
-            .clipShape(.capsule)
-            .shadow(radius: 5)
-    }
-}
 
 struct ContentView: View {
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Spain", "UK", "Ukraine", "US"].shuffled()
@@ -27,6 +18,18 @@ struct ContentView: View {
     @State private var showingFinalResult = false
     @State private var finalResultTitle = ""
     @State private var gamesPlayed = 0
+    @State private var animationAmount = 0.0
+    @State private var chosenFlagNumber = -1
+    
+    struct FlagImage: View {
+        var countryName: String
+        
+        var body: some View {
+            Image(countryName)
+                .clipShape(.capsule)
+                .shadow(radius: 5)
+        }
+    }
     
     var body: some View {
         ZStack{
@@ -48,15 +51,15 @@ struct ContentView: View {
                         Text(countries[correctAnswer])
                             .font(.largeTitle.weight(.semibold))
                     }
-                    ForEach(0..<3) {number in
+                    ForEach(0..<3) {buttonNumber in
                         Button{
-                            flagTapped(number)
+                            withAnimation {
+                                flagTapped(buttonNumber)
+                            }
                         } label: {
-//                            Image(countries[number])
-                            FlagImage(countryName: countries[number])
+                            FlagImage(countryName: countries[buttonNumber])
+                                .rotation3DEffect(.degrees(chosenFlagNumber == buttonNumber ? 360 : 0), axis: (x: 0, y: 1, z: 0))
                         }
-//                        .clipShape(.capsule)
-//                        .shadow(radius: 5)
                     }
                 }
                     .frame(maxWidth: .infinity)
@@ -85,6 +88,8 @@ struct ContentView: View {
     }
     
     func flagTapped(_ number: Int) {
+        chosenFlagNumber = number
+        print("chosenFlagNumber: \(chosenFlagNumber)")
         if number == correctAnswer {
             scoreTitle = "Correct"
             userScore += 1
@@ -100,6 +105,7 @@ struct ContentView: View {
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+        chosenFlagNumber = -1
     }
     
     func gameCheck() {
