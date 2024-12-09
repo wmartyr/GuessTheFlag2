@@ -60,6 +60,7 @@ struct ContentView: View {
                             FlagImage(countryName: countries[buttonNumber])
                                 .rotation3DEffect(.degrees(chosenFlagNumber == buttonNumber ? 360 : 0), axis: (x: 0, y: 1, z: 0))
                                 .opacity(chosenFlagNumber < 0 ? 1 : chosenFlagNumber != buttonNumber ? 0.25 : 1)
+                                .scaleEffect(chosenFlagNumber < 0 ? 1 : chosenFlagNumber != buttonNumber ? 0.75 : 1)
                         }
                     }
                 }
