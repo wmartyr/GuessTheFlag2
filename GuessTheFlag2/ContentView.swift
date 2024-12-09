@@ -59,6 +59,7 @@ struct ContentView: View {
                         } label: {
                             FlagImage(countryName: countries[buttonNumber])
                                 .rotation3DEffect(.degrees(chosenFlagNumber == buttonNumber ? 360 : 0), axis: (x: 0, y: 1, z: 0))
+                                .opacity(chosenFlagNumber < 0 ? 1 : chosenFlagNumber != buttonNumber ? 0.25 : 1)
                         }
                     }
                 }
@@ -98,8 +99,8 @@ struct ContentView: View {
             scoreTitle = "Wrong"
             alertMessage = "That's the flag of \(countries[number])."
         }
-        
-        showingScore = true
+//        showingScore = true
+        delayedScore(seconds: 0.75)
     }
     
     func askQuestion() {
@@ -121,6 +122,12 @@ struct ContentView: View {
         userScore = 0
         gamesPlayed = 0
         askQuestion()
+    }
+    
+    func delayedScore(seconds: Double) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+            showingScore = true
+        }
     }
 }
 
